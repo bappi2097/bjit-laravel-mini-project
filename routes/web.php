@@ -11,19 +11,27 @@
 |
 */
 
-use Brian2694\Toastr\Facades\Toastr;
 
-Route::get('/', function () {
-    Toastr::success('Messages in here', 'Title');
-    return view('layouts.app');
+Route::get('/', 'HomeController@index');
+
+Route::group(["as" => 'category.', "prefix" => 'category', "middleware" => ["auth"]], function () {
+    Route::get('/', "CategoryController@index")->name('index');
+    Route::post('/store', "CategoryController@store")->name('store');
+    Route::get('/edit/{category}', "CategoryController@edit")->name('edit');
+    Route::put('/{category}', "CategoryController@update")->name('update');
+    Route::delete('{category}', "CategoryController@destroy")->name('destroy');
 });
 
-Route::get('/bappi', function () {
-    return view('pages.index');
+Route::group(["as" => 'post.', "prefix" => 'post', "middleware" => ["auth"]], function () {
+    Route::get('/', "PostController@index")->name('index');
+    Route::get('/create', "PostController@create")->name('create');
+    Route::post('/store', "PostController@store")->name('store');
+    Route::get('/edit/{post}', "PostController@edit")->name('edit');
+    Route::put('/{post}', "PostController@update")->name('update');
+    Route::delete('{post}', "PostController@destroy")->name('destroy');
 });
+
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
-Route::view('test', 'single');
