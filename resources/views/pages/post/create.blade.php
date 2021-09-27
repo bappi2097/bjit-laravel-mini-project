@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Create Post | Blog')
+@push('style')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+@endpush
 @section('content')
     <div class="col-md-8">
         <div class="comment-form-wrap pt-5">
@@ -109,6 +112,8 @@
     </style>
 @endpush
 @push('script')
+    <script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
     <script>
@@ -137,6 +142,12 @@
             $('#summernote').summernote({
                 tabsize: 2,
                 height: 300
+            });
+            var multipleCancelButton = new Choices('#Category', {
+                removeItemButton: true,
+                maxItemCount: 5,
+                searchResultLimit: 5,
+                renderChoiceLimit: 5
             });
         }())
     </script>

@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Edit Post | Blog')
+@push('style')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+@endpush
 @section('content')
     <div class="col-md-8">
         <div class="comment-form-wrap pt-5">
@@ -30,14 +33,13 @@
                     @enderror
                 </div>
                 <div class="">
-                            <label for=" Category">Category <span class="text-danger">(Use
-                        CTRL for multiple select)</span> </label>
-                    <select class="form-control" id="Category" name="category[]" multiple
+                    <label for=" Category">Category</label>
+                    <br>
+                    <select class="form-control" id="Category" name="category[]" multiple @foreach ($categories as $item)
                         style="height: 200px !important">
-                        @foreach ($categories as $item)
-                            <option @if (in_array($item->id, $post->categories->pluck('id')->all())) selected @endif value="{{ $item->id }}"
-                                style="border-bottom: 1px solid black;"> {{ $item->name }}
-                            </option>
+                        <option @if (in_array($item->id, $post->categories->pluck('id')->all())) selected @endif value="{{ $item->id }}"
+                            style="border-bottom: 1px solid black;"> {{ $item->name }}
+                        </option>
                         @endforeach
                     </select>
                     @error('category')
@@ -110,6 +112,7 @@
     </style>
 @endpush
 @push('script')
+    <script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
     <script>
@@ -138,6 +141,12 @@
             $('#summernote').summernote({
                 tabsize: 2,
                 height: 300
+            });
+            var multipleCancelButton = new Choices('#Category', {
+                removeItemButton: true,
+                maxItemCount: 5,
+                searchResultLimit: 5,
+                renderChoiceLimit: 5
             });
         }())
     </script>
