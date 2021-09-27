@@ -11,10 +11,16 @@
                     <div class="form-group">
                         <label for="name">Name *</label>
                         <input type="text" class="form-control" id="name" name="name" value="{{ $category->name }}">
+                        @error('name')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label for="slug">Slug *</label>
                         <input type="text" class="form-control" id="slug" name="slug" value="{{ $category->slug }}">
+                        @error('slug')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                         <div class="form-group">
                             <input type="submit" value="Add Category" class="btn py-3 mt-4 px-4 btn-primary">
                         </div>

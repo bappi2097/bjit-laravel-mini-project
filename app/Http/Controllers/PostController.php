@@ -46,7 +46,7 @@ class PostController extends Controller
             "title" => "required|string|max:255",
             "slug" => "required|string|unique:categories,slug|max:255",
             "summery" => "required|string",
-            "category" => "array",
+            "category" => "required|array",
             "category.*" => "exists:categories,id",
             "description" => "required",
             "image" => "nullable|file"
@@ -62,9 +62,7 @@ class PostController extends Controller
 
         $category_ids = $request->category;
         if ($request->hasFile('image')) {
-            $path = Storage::putFile('public', $request->file('image'));
-            $url = Storage::url($path);
-            $data["image"] = $url;
+            $data["image"] = Storage::disk("public")->put('post', $request->file('image'));
         }
 
         $post = new Post($data);
@@ -84,9 +82,10 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show($slug)
     {
-        //
+        $post = Post::with('categories')->where('slug', $slug)->first();
+        return view('pages.single', compact('post'));
     }
 
     /**
@@ -115,7 +114,7 @@ class PostController extends Controller
             "title" => "required|string|max:255",
             "slug" => "required|string|unique:categories,slug|max:255",
             "summery" => "required|string",
-            "category" => "array",
+            "category" => "required|array",
             "category.*" => "exists:categories,id",
             "description" => "required",
             "image" => "nullable|file"
@@ -131,9 +130,10 @@ class PostController extends Controller
 
         $category_ids = $request->category;
         if ($request->hasFile('image')) {
-            $path = Storage::putFile('public', $request->file('image'));
-            $url = Storage::url($path);
-            $data["image"] = $url;
+            if (Storage::disk("public")->exists($post->image)) {
+                Storage::disk("public")->delete($post->image);
+            }
+            $data["image"] = Storage::disk("public")->put('post', $request->file('image'));
         }
 
         $post->fill($data);
@@ -155,6 +155,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        if (Storage::disk("public")->exists($post->image)) {
+            Storage::disk("public")->delete($post->image);
+        }
         $post->categories()->detach();
         if ($post->delete()) {
             Toastr::success("Post Deleted Succesfully");

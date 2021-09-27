@@ -10,10 +10,16 @@
                     <div class="form-group">
                         <label for="name">Name *</label>
                         <input type="text" class="form-control" id="name" name="name">
+                        @error('name')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label for="slug">Slug *</label>
                         <input type="text" class="form-control" id="slug" name="slug">
+                        @error('slug')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                         <div class="form-group">
                             <input type="submit" value="Add Category" class="btn py-3 mt-4 px-4 btn-primary">
                         </div>
@@ -55,6 +61,13 @@
                     @endforelse
                 </tbody>
             </table>
+            <div class="row">
+                <div class="col">
+                    <div class="block-27">
+                        {{ $categories->links() }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

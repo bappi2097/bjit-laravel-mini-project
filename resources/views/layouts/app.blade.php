@@ -17,12 +17,8 @@
                                     </div>
                                 </form>
                             </div>
-
-
-
-
                             @include('layouts.partials.categories')
-                            @include('layouts.partials.popular')
+                            @include('layouts.partials.popular', ["posts" => \App\Post::latest()->get()->take(5)])
                             @include('layouts.partials.tags')
                         </div><!-- END COL -->
                     </div>

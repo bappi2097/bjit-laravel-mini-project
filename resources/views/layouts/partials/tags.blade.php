@@ -1,4 +1,4 @@
-<div class="sidebar-box ftco-animate">
+{{-- <div class="sidebar-box ftco-animate">
     <h3 class="sidebar-heading">Tag Cloud</h3>
     <ul class="tagcloud">
         <a href="#" class="tag-cloud-link">animals</a>
@@ -10,4 +10,4 @@
         <a href="#" class="tag-cloud-link">leaves</a>
         <a href="#" class="tag-cloud-link">food</a>
     </ul>
-</div>
+</div> --}}

@@ -1,8 +1,9 @@
 @extends('layouts.app')
 @section('content')
     <div class="col-xl-8 py-5 px-md-5">
+        <h1>{{ $category_name }}</h1>
         <div class="row pt-md-4">
-            @forelse ($posts as $index => $post)
+            @forelse ($posts as $post)
                 <div class="col-md-12">
                     <div class="blog-entry ftco-animate d-md-flex">
                         <a href="{{ route('post.show', $post->slug) }}" class="img img-2"
@@ -26,15 +27,6 @@
                                 <a href="{{ route('post.show', $post->slug) }}" class="btn-custom">Read More <span
                                         class="ion-ios-arrow-forward"></span></a>
                                 <a href="{{ route('post.edit', $post->id) }}" class="btn btn-info">Edit</a>
-                                <a class="btn btn-outline-danger" href="{{ route('post.destroy', $post->id) }}"
-                                    onclick="event.preventDefault(); document.querySelector('#delete-{{ $index }}').submit();">
-                                    Delete
-                                </a>
-                            <form id="delete-{{ $index }}" action="{{ route('post.destroy', $post->id) }}"
-                                method="post">
-                                @csrf
-                                @method('DELETE')
-                            </form>
                             </p>
                         </div>
                     </div>

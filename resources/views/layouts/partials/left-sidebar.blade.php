@@ -2,12 +2,13 @@
 <aside id="colorlib-aside" role="complementary" class="js-fullheight">
     <nav id="colorlib-main-menu" role="navigation">
         <ul>
-            <li class="colorlib-active"><a href="/">Home</a></li>
+            <li @if (Request::is('/')) class="colorlib-active" @endif><a href="/">Home</a></li>
             @auth
-                <li><a href="javascript::void(0)">Profile</a></li>
-                <li><a href="{{ route('post.create') }}">Creae Post</a></li>
-                <li><a href="{{ route('category.index') }}">Create Category</a></li>
-                <li><a href="javascript::void(0)">Users</a></li>
+                <li @if (Request::is('profile')) class="colorlib-active" @endif><a href="{{ route('profile.show') }}">Profile</a></li>
+                <li @if (Request::is('post/create')) class="colorlib-active" @endif><a href="{{ route('post.create') }}">Create Post</a></li>
+                @if (auth()->user()->is_admin)
+                    <li @if (Request::is('category')) class="colorlib-active" @endif><a href="{{ route('category.index') }}">Create Category</a></li>
+                @endif
                 <li><a href="javascript::void(0)" onclick="document.querySelector('#logout').submit();">Logout</a></li>
                 <form action="{{ route('logout') }}" method="post" id="logout">
                     @csrf

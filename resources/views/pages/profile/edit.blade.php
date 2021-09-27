@@ -1,61 +1,45 @@
 @extends('layouts.app')
-@section('title', 'Edit Post | Blog')
+@section('title', 'Edit Profile | Blog')
 @section('content')
     <div class="col-md-8">
         <div class="comment-form-wrap pt-5">
-            <h3 class="mb-5">Post</h3>
-            <form action="{{ route('post.update', $post->id) }}" method="POST" class="p-3 p-md-5 bg-light"
+            <h3 class="mb-5">Profile</h3>
+            <form action="{{ route('profile.update') }}" method="POST" class="p-3 p-md-5 bg-light"
                 enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="form-group">
-                    <label for="title">Title *</label>
-                    <input type="text" class="form-control" id="title" name="title" value="{{ $post->title }}">
-                    @error('title')
+                    <label for="name">Name *</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}">
+                    @error('name')
                         <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="slug">Slug *</label>
-                    <input type="text" class="form-control" id="slug" name="slug" value="{{ $post->slug }}">
-                    @error('slug')
+                    <label for="email">Email *</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
+                    @error('email')
                         <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="summery">Summery *</label>
-                    <textarea class="form-control" id="summery" name="summery">{{ $post->summery }}</textarea>
-                    @error('summery')
-                        <p class="text-danger">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div class="">
-                            <label for=" Category">Category <span class="text-danger">(Use
-                        CTRL for multiple select)</span> </label>
-                    <select class="form-control" id="Category" name="category[]" multiple
-                        style="height: 200px !important">
-                        @foreach ($categories as $item)
-                            <option @if (in_array($item->id, $post->categories->pluck('id')->all())) selected @endif value="{{ $item->id }}"
-                                style="border-bottom: 1px solid black;"> {{ $item->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('category')
+                    <label for="address">Address *</label>
+                    <textarea class="form-control" id="address" name="address">{{ $user->profile->address }}</textarea>
+                    @error('address')
                         <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="summernote">Decription</label>
-                    <textarea class="form-control" id="summernote" name="description">{!! $post->description !!}</textarea>
-                    @error('description')
+                    <label for="bio">Bio</label>
+                    <textarea class="form-control" id="bio" name="bio">{!! $user->profile->bio !!}</textarea>
+                    @error('bio')
                         <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
                 <div class="img_div">
                     <button type="button" class="img_btn">
-                        <img id="post-img" class="show_img"
-                            src="{{ asset($post->image ? Storage::url($post->image) : 'template/images/placeholder.svg') }}"
-                            alt="Dummy" />
+                        <img id="user_img" class="show_img"
+                            src="{{ asset($user->profile->image ?? 'template/images/placeholder.svg') }}" alt="Dummy" />
                     </button>
                     <input name="image" id="img_input" class="img_input" type="file" accept="image/*" />
                     @error('image')
@@ -64,7 +48,7 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="submit" value="Add Post" class="btn py-3 mt-4 px-4 btn-primary">
+                    <input type="submit" value="Update Profile" class="btn py-3 mt-4 px-4 btn-primary">
                 </div>
             </form>
         </div>
@@ -114,28 +98,18 @@
 
     <script>
         (function() {
-            document.querySelector('#title').addEventListener('input', (event) => {
-                let name = event.target.value;
-                if (name) {
-                    document.querySelector('#slug').value = name.replace(/[^a-zA-Z0-9 -]/g, "").toLowerCase()
-                        .split(" ").join(
-                            '-');
-                } else {
-                    document.querySelector('#slug').value = "";
-                }
-            });
 
             document.querySelector('#img_input').addEventListener('input', (input) => {
                 if (input.target.files && input.target.files[0]) {
                     var reader = new FileReader();
                     reader.onload = function(e) {
-                        $('#post-img')
+                        $('#user_img')
                             .attr('src', e.target.result);
                     };
                     reader.readAsDataURL(input.target.files[0]);
                 }
             });
-            $('#summernote').summernote({
+            $('#bio').summernote({
                 tabsize: 2,
                 height: 300
             });

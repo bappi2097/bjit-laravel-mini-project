@@ -110,4 +110,12 @@ class CategoryController extends Controller
         }
         return redirect(route('category.index'));
     }
+
+    public function categoryPosts($slug)
+    {
+        $category = Category::with('posts')->where('slug', $slug);
+        $category_name = $category->first()->name;
+        $posts = $category->exists() ? $category->first()->posts()->paginate(10) : [];
+        return view('pages.category', compact('posts', 'category_name'));
+    }
 }
