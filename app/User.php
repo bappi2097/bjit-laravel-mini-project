@@ -27,7 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
     ];
 
     /**
@@ -73,5 +73,10 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     public function isAuthor()
     {
         return auth()->check() && auth()->user()->id == $this->id;
+    }
+
+    public function markVerified()
+    {
+        $this->markEmailAsVerified();
     }
 }
