@@ -3,18 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\User;
+use App\Mail\VerifyEmail;
+use App\Jobs\VerifyMailJob;
 use Illuminate\Http\Request;
+use App\Mail\ForgetPasswordEmail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ForgetPasswordFormRequest;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\LoginFormRequest;
-use App\Traits\ApiResponseWithHttpStatus;
-use App\Http\Requests\RegistrationFormRequest;
 use App\Jobs\ForgetPasswordEmailJob;
-use App\Jobs\VerifyMailJob;
-use App\Mail\ForgetPasswordEmail;
-use App\Mail\VerifyEmail;
+use Illuminate\Support\Facades\Auth;
+use App\Traits\ApiResponseWithHttpStatus;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
@@ -26,7 +23,7 @@ class UserController extends Controller
         Auth::shouldUse('users');
     }
 
-    public function login(LoginFormRequest $request)
+    public function login(\App\Http\Requests\LoginFormRequest $request)
     {
         $input = $request->only('email', 'password');
         if (!$token = JWTAuth::attempt($input)) {
@@ -42,7 +39,7 @@ class UserController extends Controller
         return $this->apiResponse('Success Login', $data, Response::HTTP_OK, true);
     }
 
-    public function register(RegistrationFormRequest $request)
+    public function register(\App\Http\Requests\RegistrationFormRequest $request)
     {
         $user = new User();
         $user->name = $request->name;
@@ -90,7 +87,11 @@ class UserController extends Controller
     {
         $user = User::where('remember_token', $request->access_token)->first();
         $user->markVerified();
-        return $this->apiResponse('Email verify Success', null, Response::HTTP_OK, true);
+        $data = [
+            'access_token' => $token,
+            'user' => $user
+        ];
+        return $this->apiResponse('Email verify Success', $data, Response::HTTP_OK, true);
     }
 
     public function forgetPassword(Request $request)
@@ -129,7 +130,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function resetPassword(ForgetPasswordFormRequest $request)
+    public function resetPassword(\App\Http\Requests\ForgetPasswordFormRequest $request)
     {
         $user = User::where(['remember_token' => $request->access_token, 'email' => $request->email]);
         if (!$user->exists()) {
